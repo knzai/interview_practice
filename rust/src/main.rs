@@ -7,12 +7,23 @@ use interview;
 #[clap(version = "0.1", author = "Kenzi Connor")]
 pub struct Args {
     #[clap(name = "NAME")]
-    pub name: String,
+    pub n: usize,
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = Args::parse();
-    println!("Hello, {}!", args.name);    
+    println!("Fibonacci for: {}!", args.n);
+
+    let (mut a,mut b) = (1,0);
+    let mut c;
+
+    for _i in 0..args.n {
+        c = a + b;
+        print!("{} ", c);
+        a = b;
+        b = c;
+    }
+
     Ok(())
 }
 
