@@ -1,18 +1,21 @@
 use clap::Parser;
 
 #[allow(unused_imports)]
-use interview;
+use interview::fizzbuzz;
 
 #[derive(Parser, Debug)]
 #[clap(version = "0.1", author = "Kenzi Connor")]
 pub struct Args {
-    #[clap(name = "NAME")]
-    pub name: String,
+    #[clap(name = "NUMBER")]
+    pub number: usize,
 }
+
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = Args::parse();
-    println!("Hello, {}!", args.name);    
+    for i in 0..=args.number {
+        println!("Fizzbuzz for {} is {}", i, fizzbuzz(i));
+    }
     Ok(())
 }
 
