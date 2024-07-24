@@ -19,7 +19,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 mod tests {
     use crate::main;
 
-#[test]
+    #[test]
     fn main_passes() {
         assert_eq!(main().unwrap(), ());
     }
