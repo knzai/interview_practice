@@ -1,7 +1,6 @@
 use clap::Parser;
 
-#[allow(unused_imports)]
-use interview;
+//use lists::first::List;
 
 #[derive(Parser, Debug)]
 #[clap(version = "0.1", author = "Kenzi Connor")]
@@ -11,8 +10,8 @@ pub struct Args {
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let args = Args::parse();
-    println!("Hello, {}!", args.name);    
+    //let list: List = List::Elem(1, Box::new(List::Elem(2, Box::new(List::Empty))));
+    //println!("{:?}", list);
     Ok(())
 }
 
