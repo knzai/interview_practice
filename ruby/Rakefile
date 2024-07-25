@@ -1,5 +1,5 @@
 task default: %w[test]
 
 task :test do
-  ruby 'example_test.rb'
+  ruby 'linked_list_test.rb'
 end
