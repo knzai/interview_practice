@@ -1,43 +1,40 @@
 require 'forwardable'
 
 class Node
-	N = self
-	self.singleton_class.send(:alias_method, :n, :new)
-	
 	include Enumerable
 	extend Forwardable
 
-	attr_accessor :h, :t
-	alias :peek :h
-	alias :next :t
+	attr_accessor :element, :link
+	alias :peek :element
+	alias :next :link
 
-	def_delegator :@h, :to_s
+	def_delegator :@element, :to_s
 
-	def initialize(h=nil, t=nil)
-		@h, @t = h, t
+	def initialize(element=nil, link=nil)
+		@element, @link = element, link
 	end
 
 	def append(v)
-		tap { @t = @t&.append(v) || N.n(v) }
+		tap { @link = @link&.append(v) || Node.new(v) }
 	end
 
 	def unshift
-	  l,s = reverse_each.first(2); l.h.tap { l.h = s&.t = nil }
+	  l,s = reverse_each.first(2); l.element.tap { l.element = s&.link = nil }
 	end
 
 	def push(v)
-		@t = N.n(@h, @t).tap { @h = v }
+		@link = Node.new(@element, @link).tap { @element = v }
 	end
 
 	def pop
-		@h.tap { @h, @t= @t&.h, @t&.t }
+		@element.tap { @element, @link= @link&.element, @link&.link }
 	end
 
 	def each(&b)
-		yield(self); @t&.each(&b)
+		yield(self); @link&.each(&b)
 	end
 
 	def inspect
-    [@h, @t].inspect
+    [@element, @link].inspect
   end
 end
