@@ -1,7 +1,6 @@
-require "minitest/autorun"
-require "./example"
+require 'test/unit'
 
-class MyTest < Minitest::Test
+class MyTest < Test::Unit::TestCase
   def test_my_function
       assert_equal(1, my_function)
   end
