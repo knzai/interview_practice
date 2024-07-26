@@ -1,56 +1,43 @@
+require 'forwardable'
+
 class Node
+	N = self
+	self.singleton_class.send(:alias_method, :n, :new)
+	
 	include Enumerable
+	extend Forwardable
 
-	attr_accessor :car, :cdr
-	alias :peek :car
+	attr_accessor :h, :t
+	alias :peek :h
+	alias :next :t
 
-	def initialize(car=nil, cdr=nil)
-		self.car = car
-		self.cdr = cdr
+	def_delegator :@h, :to_s
+
+	def initialize(h=nil, t=nil)
+		@h, @t = h, t
 	end
 
-
-	def append(value)
-		self.cdr = Node.new value
+	def append(v)
+		tap { @t = @t&.append(v) || N.n(v) }
 	end
 
-	def append(value)
-		if self.cdr
-			self.cdr.append(value)
-		else
-			self.cdr = Node.new value
-		end
+	def unshift
+	  l,s = reverse_each.first(2); l.h.tap { l.h = s&.t = nil }
 	end
 
-	def push(value)
-		old_self = Node.new self.car, self.cdr
-		self.car = value
-		self.cdr = old_self
+	def push(v)
+		@t = N.n(@h, @t).tap { @h = v }
 	end
 
 	def pop
-		value = self.car
-		if next_node = self.cdr
-			self.car = next_node.car
-			self.cdr = next_node.cdr
-		else
-			self.car = nil
-		end
-		value
+		@h.tap { @h, @t= @t&.h, @t&.t }
 	end
 
-	def each
-		yield self
-		current = self
-		while current = current.cdr
-			yield current
-		end
-
-
-		# if self.cdr
-		# 	yield self.cdr.each
-		# else
-		# 	yield car
-		# end
+	def each(&b)
+		yield(self); @t&.each(&b)
 	end
+
+	def inspect
+    [@h, @t].inspect
+  end
 end
