@@ -24,10 +24,51 @@ class Parser
   end
 end
 
-def my_function
-  options = Parser.parse ARGV
-  puts options.name
+@arr = []
 
-  return 0
+File.open("dictionary.txt", "r") do |f|
+  f.each_line do |line|
+    @arr.push(line.strip)
+  end
 end
-my_function()
+
+
+def count_letters(collection)
+  collection.map { |ele| ele.chars.tally }
+end
+
+
+#@lcs = count_letters(@arr)
+
+
+def exists(word)
+  #puts word.strip
+  #@arr.index(word)
+  wh = word.chars.tally
+
+  @arr.map do |line|
+    fh = line.chars.tally
+
+
+
+    # wh.select do |k, v|
+    #   if lv = fh[k]
+    #     lv - v <= 0
+    #   else
+    #     false
+    #   end
+    # end
+  end
+
+  #puts @lcs.select { |line| (line.to_a - w.to_a) == [] }
+
+  #puts @lcs
+  
+end
+
+#puts @arr
+
+options = Parser.parse ARGV
+puts exists(options.name)
+
+#my_function()
