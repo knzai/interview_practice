@@ -14,8 +14,12 @@ module Scrabble
   end
 
   class Dictionary < Hash
-    def initialize(file_path)
-      File.open(file_path).readlines.map(&:strip).each do |line|
+    def self.from_file(file_path)
+      self.new(File.open(file_path).readlines.map(&:strip))
+    end
+
+    def initialize(lines)
+      lines.each do |line|
         self[line] = line.chars.tally.extend(FreqHash)
       end
     end

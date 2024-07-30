@@ -3,7 +3,7 @@ require "./scrabble"
 
 class MyTest < Test::Unit::TestCase
   def setup
-    @dict = Scrabble::Dictionary.new "dictionary.txt"
+    @dict = Scrabble::Dictionary.new ["AA", "AD", "ADD", "DAD", "BAD"]
   end
 
   def test_freq_hash_sub
