@@ -4,12 +4,8 @@ module Scrabble
       mod.default = 0
     end
 
-    def -(rhs)
-      newh = self.clone
-      rhs.each do |k, v|
-        newh.delete(k) if (newh[k] -= v) <= 0
-      end
-      newh
+    def <= (rhs)
+      select{ |k, v| (v - rhs[k]) > 0}.empty?
     end
   end
 
@@ -25,8 +21,7 @@ module Scrabble
     end
 
     def possible_words(word)
-      self.select { |k, v| (v - word.chars.tally ).empty? }.keys
+      self.select { |k, v| v <= word.chars.tally.extend(FreqHash) }.keys
     end
   end
 end
-

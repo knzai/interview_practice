@@ -8,7 +8,8 @@ class MyTest < Test::Unit::TestCase
 
   def test_freq_hash_sub
     hash = { foo: 5, bar: 3}.extend(Scrabble::FreqHash)
-    assert_equal ({foo: 2}), (hash - {foo: 3, bar: 3, baz: 3})
+    assert hash <= {foo: 5, bar: 5, baz: 3}
+    assert_false hash <= {foo: 3, bar: 5, baz: 3}
     assert_equal ({ foo: 5, bar: 3}), hash
   end
 
