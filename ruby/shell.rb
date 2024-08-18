@@ -28,37 +28,12 @@ def usage
   USAGE
 end
 
-def examples
-  <<~EXAMPLES
-    #{CYAN}Examples#{RESET}
-       #{BLUE}# Standard usage#{RESET}
-       ./#{SCRIPT_NAME} args
-  EXAMPLES
-end
-
-def version
-  "#{SCRIPT_NAME} #{VERSION_NUM}"
-end
-
-def metadata
-  <<~METADATA
-    #{CYAN}Authour & Copyright:#{RESET}
-       #{BLUE}version#{RESET}     #{SCRIPT_NAME} #{VERSION_NUM}
-       #{BLUE}author#{RESET}      Kenzi Connor
-       #{BLUE}copyright#{RESET}   Copyright (c) Public Domain
-       #{BLUE}license#{RESET}     Public Domain via Unlicense (see footer)
-       #{BLUE}site#{RESET}        knz.ai/
-       #{BLUE}source#{RESET}      gist.github.com/
-    #{CYAN}Version history:#{RESET}
-       #{BLUE}2024/07/10#{RESET} : 0.0.1 : Script creation
-  METADATA
-end
-
 # Ruby's default CLI flag and option parsing
 # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
 class Parser
   def self.parse(options)
-    args = Struct.new(:name).new
+    #stick parsed args in here for usage
+    args = Hash.new
 
     opt_parser = OptionParser.new do |opts|
       opts.banner = usage
@@ -85,6 +60,32 @@ class Parser
   end
 end
 # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+
+def examples
+  <<~EXAMPLES
+    #{CYAN}Examples#{RESET}
+       #{BLUE}# Standard usage#{RESET}
+       ./#{SCRIPT_NAME} args
+  EXAMPLES
+end
+
+def version
+  "#{SCRIPT_NAME} #{VERSION_NUM}"
+end
+
+def metadata
+  <<~METADATA
+    #{CYAN}Authour & Copyright:#{RESET}
+       #{BLUE}version#{RESET}     #{SCRIPT_NAME} #{VERSION_NUM}
+       #{BLUE}author#{RESET}      Kenzi Connor
+       #{BLUE}copyright#{RESET}   Copyright (c) Public Domain
+       #{BLUE}license#{RESET}     Public Domain via Unlicense (see footer)
+       #{BLUE}site#{RESET}        knz.ai/
+       #{BLUE}source#{RESET}      gist.github.com/
+    #{CYAN}Version history:#{RESET}
+       #{BLUE}2024/07/10#{RESET} : 0.0.1 : Script creation
+  METADATA
+end
 
 #============================
 # MESSAGING & COLORS
