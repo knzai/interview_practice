@@ -1,12 +1,15 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
+#============================
+# REQUIRES/DEPS
+#============================
 require 'optparse'
-Options = Struct.new(:name)
 
 #============================
 # CONSTANTS & DEFAULTS
 #============================
-#constants
+# constants
 SCRIPT_NAME = 'example.rb'
 VERSION_NUM = '0.1'
 
@@ -14,23 +17,23 @@ VERSION_NUM = '0.1'
 # USAGE & METADATA
 #============================
 def usage
-<<~EOF
-  #{CYAN}Name:#{RESET} #{SCRIPT_NAME} #{VERSION_NUM}
-  #{CYAN}Description:#{RESET}
-  #{CYAN}Usage:#{RESET} 
-  #{RED}<ENV>#{RESET} ./#{SCRIPT_NAME} #{YELLOW}[-h, --help] [-v --version] [-e --example #{RED}<arg>#{YELLOW}]#{RESET}
-  #{CYAN}Environoment variables:#{RESET}
-      FOO                              REQUIRED
-  #{CYAN}Arguments:#{RESET}
-EOF
+  <<~USAGE
+    #{CYAN}Name:#{RESET} #{SCRIPT_NAME} #{VERSION_NUM}
+    #{CYAN}Description:#{RESET}
+    #{CYAN}Usage:#{RESET}#{' '}
+    #{RED}<ENV>#{RESET} ./#{SCRIPT_NAME} #{YELLOW}[-h, --help] [-v --version] [-e --example #{RED}<arg>#{YELLOW}]#{RESET}
+    #{CYAN}Environoment variables:#{RESET}
+        FOO                              REQUIRED
+    #{CYAN}Arguments:#{RESET}
+  USAGE
 end
 
 def examples
-<<~EOF
-  #{CYAN}Examples#{RESET}
-     #{BLUE}# Standard usage#{RESET}
-     ./#{SCRIPT_NAME} args
-EOF
+  <<~EXAMPLES
+    #{CYAN}Examples#{RESET}
+       #{BLUE}# Standard usage#{RESET}
+       ./#{SCRIPT_NAME} args
+  EXAMPLES
 end
 
 def version
@@ -38,70 +41,73 @@ def version
 end
 
 def metadata
-<<~EOF
-  #{CYAN}Authour & Copyright:#{RESET}
-     #{BLUE}version#{RESET}     #{SCRIPT_NAME} #{VERSION_NUM}
-     #{BLUE}author#{RESET}      Kenzi Connor
-     #{BLUE}copyright#{RESET}   Copyright (c) Public Domain
-     #{BLUE}license#{RESET}     Public Domain via Unlicense (see footer)
-     #{BLUE}site#{RESET}        knz.ai/
-     #{BLUE}source#{RESET}      gist.github.com/
-  #{CYAN}Version history:#{RESET}
-     #{BLUE}2024/07/10#{RESET} : 0.0.1 : Script creation
-EOF
+  <<~METADATA
+    #{CYAN}Authour & Copyright:#{RESET}
+       #{BLUE}version#{RESET}     #{SCRIPT_NAME} #{VERSION_NUM}
+       #{BLUE}author#{RESET}      Kenzi Connor
+       #{BLUE}copyright#{RESET}   Copyright (c) Public Domain
+       #{BLUE}license#{RESET}     Public Domain via Unlicense (see footer)
+       #{BLUE}site#{RESET}        knz.ai/
+       #{BLUE}source#{RESET}      gist.github.com/
+    #{CYAN}Version history:#{RESET}
+       #{BLUE}2024/07/10#{RESET} : 0.0.1 : Script creation
+  METADATA
 end
 
+# Ruby's default CLI flag and option parsing
+# rubocop:disable Metrics/AbcSize, Metrics/MethodLength
 class Parser
   def self.parse(options)
-    args = Options.new
+    args = Struct.new(:name).new
 
     opt_parser = OptionParser.new do |opts|
       opts.banner = usage
 
-      opts.on("-h", "--help", "Prints this help") do
-        STDERR.puts opts
-        STDERR.puts examples
+      opts.on('-h', '--help', 'Prints this help') do
+        warn opts
+        warn examples
         exit
       end
 
-      opts.on("-v", "Output version info.") do
-        STDERR.puts version
+      opts.on('-v', 'Output version info.') do
+        warn version
         exit
       end
 
-      opts.on("--version", "Output version with more metadata") do
-        STDERR.puts metadata
+      opts.on('--version', 'Output version with more metadata') do
+        warn metadata
         exit
       end
     end
 
     opt_parser.parse!(options)
-    return args
+    args
   end
 end
+# rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
 #============================
 # MESSAGING & COLORS
 #============================
-#figure out how much you are about this later
-#if `tput colors` > 7
-  RESET=`tput setaf 7`
-  RED=`tput setaf 1`
-  GREEN=`tput setaf 2`
-  BLUE=`tput setaf 4`
-  CYAN=`tput setaf 6`
-  YELLOW=`tput setaf 3`
-#end
+# figure out how much you care about this later
+# if `tput colors` > 7
+RESET = `tput setaf 7`.freeze
+RED = `tput setaf 1`.freeze
+GREEN = `tput setaf 2`.freeze
+BLUE = `tput setaf 4`.freeze
+CYAN = `tput setaf 6`.freeze
+YELLOW = `tput setaf 3`.freeze
+# end
 
 #============================
 # MAIN
 #============================
 def my_function
   options = Parser.parse ARGV
-  STDERR.puts options
-  return 0
+  warn options
+  0
 end
-my_function()
+my_function
 
 #===============================================================================
 # LICENSE: Public Domain via Unlicense
@@ -120,7 +126,7 @@ my_function()
 # successors. We intend this dedication to be an overt act of
 # relinquishment in perpetuity of all present and future rights to this
 # software under copyright law.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 # MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
