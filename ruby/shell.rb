@@ -9,41 +9,65 @@ require 'optparse'
 #============================
 # CONSTANTS & DEFAULTS
 #============================
-# constants
 SCRIPT_NAME = 'example.rb'
 VERSION_NUM = '0.1'
-RESET = `tput setaf 7`.freeze
-RED = `tput setaf 1`.freeze
-GREEN = `tput setaf 2`.freeze
-BLUE = `tput setaf 4`.freeze
-CYAN = `tput setaf 6`.freeze
-YELLOW = `tput setaf 3`.freeze
+# colored terminal output
+BLACK   = `tput setaf 0`.freeze
+RED     = `tput setaf 1`.freeze
+GREEN   = `tput setaf 2`.freeze
+YELLOW  = `tput setaf 3`.freeze
+BLUE    = `tput setaf 4`.freeze
+MAGENTA = `tput setaf 5`.freeze
+CYAN    = `tput setaf 6`.freeze
+RESET   = WHITE = `tput setaf 7`.freeze
 
 #============================
 # USAGE & METADATA
 #============================
-def usage
-  <<~USAGE
-    #{CYAN}Name:#{RESET} #{SCRIPT_NAME} #{VERSION_NUM}
-    #{CYAN}Description:#{RESET}
-    #{CYAN}Usage:#{RESET}#{' '}
-    #{RED}<ENV>#{RESET} ./#{SCRIPT_NAME} #{YELLOW}[-h, --help] [-v --version] [-e --example #{RED}<arg>#{YELLOW}]#{RESET}
-    #{CYAN}Environoment variables:#{RESET}
-        FOO                              REQUIRED
-    #{CYAN}Positional Arguments:#{RESET}
-        ARGV[0]                          Name to address greeting to
-    #{CYAN}Flags and Options:#{RESET}
-  USAGE
-end
+class ArgParser
+  def self.usage
+    <<~USAGE
+      #{CYAN}Name:#{RESET} #{script_name} #{VERSION_NUM}
+      #{CYAN}Description:#{RESET}
+      #{CYAN}Usage:#{RESET}#{' '}
+      #{RED}<ENV>#{RESET} ./#{script_name} #{YELLOW}[-h, --help] [-v --version] [-e --example #{RED}<arg>#{YELLOW}]#{RESET}
+      #{CYAN}Environoment variables:#{RESET}
+          FOO                              REQUIRED
+      #{CYAN}Positional Arguments:#{RESET}
+          ARGV[0]                          Name to address greeting to
+      #{CYAN}Flags and Options:#{RESET}
+    USAGE
+  end
 
-# Ruby's default CLI flag and option parsing
-# rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-class Parser
-  def self.parse(options)
-    #stick parsed args in here for usage
-    args = Hash.new
+  def self.examples
+    <<~EXAMPLES
+      #{CYAN}Examples#{RESET}
+         #{BLUE}# Standard usage#{RESET}
+         ./#{script_name} args
+    EXAMPLES
+  end
 
-    opt_parser = OptionParser.new do |opts|
+  def self.version
+    "#{script_name} #{VERSION_NUM}"
+  end
+
+  def self.metadata
+    <<~METADATA
+      #{CYAN}Authour & Copyright:#{RESET}
+         #{BLUE}version#{RESET}     #{script_name} #{VERSION_NUM}
+         #{BLUE}author#{RESET}      Kenzi Connor
+         #{BLUE}copyright#{RESET}   Copyright (c) Public Domain
+         #{BLUE}license#{RESET}     Public Domain via Unlicense (see footer)
+         #{BLUE}site#{RESET}        knz.ai/
+         #{BLUE}source#{RESET}      gist.github.com/
+      #{CYAN}Version history:#{RESET}
+         #{BLUE}2024/07/10#{RESET} : 0.0.1 : Script creation
+    METADATA
+  end
+
+  # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+  def self.option_parser
+    @option_parser ||= OptionParser.new do |opts|
       opts.banner = usage
 
       opts.on('-h', '--help', 'Prints this help') do
@@ -62,49 +86,37 @@ class Parser
         exit
       end
 
-      opts.on('-gGREETING', "--greeting=GREETING", 'Greeting to address to ARGV[0]') do |name|
-        args[:name] = name
-      end
+      opts.on('-gGREETING', '--greeting=GREETING', 'Greeting to address to ARGV[0]')
     end
+  end
+  # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
-    opt_parser.parse!(options)
+  def self.parse
+    args = {}
+    option_parser.parse!(into: args)
+    die 'missing required positional parameter' unless (args[:name] = ARGV[0])
     args
   end
-end
-# rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
-def examples
-  <<~EXAMPLES
-    #{CYAN}Examples#{RESET}
-       #{BLUE}# Standard usage#{RESET}
-       ./#{SCRIPT_NAME} args
-  EXAMPLES
+  def self.script_name
+    "#{GREEN}#{SCRIPT_NAME}#{RESET}"
+  end
 end
 
-def version
-  "#{SCRIPT_NAME} #{VERSION_NUM}"
-end
-
-def metadata
-  <<~METADATA
-    #{CYAN}Authour & Copyright:#{RESET}
-       #{BLUE}version#{RESET}     #{SCRIPT_NAME} #{VERSION_NUM}
-       #{BLUE}author#{RESET}      Kenzi Connor
-       #{BLUE}copyright#{RESET}   Copyright (c) Public Domain
-       #{BLUE}license#{RESET}     Public Domain via Unlicense (see footer)
-       #{BLUE}site#{RESET}        knz.ai/
-       #{BLUE}source#{RESET}      gist.github.com/
-    #{CYAN}Version history:#{RESET}
-       #{BLUE}2024/07/10#{RESET} : 0.0.1 : Script creation
-  METADATA
+#============================
+# MESSAGING
+#============================
+def die(output)
+  warn output
+  exit 2
 end
 
 #============================
 # MAIN
 #============================
 def my_function
-  options = Parser.parse ARGV
-  puts "#{ARGV[0]} #{options[:name]}"
+  args = ArgParser.parse
+  puts "#{args[:greeting]} #{args[:name]}"
   0
 end
 my_function

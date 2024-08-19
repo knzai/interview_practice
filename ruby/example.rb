@@ -3,7 +3,6 @@
 
 require 'optparse'
 
-# rubocop:disable Metrics/MethodLength
 # Ruby's default CLI flag and option parsing
 class Parser
   def self.parse(options)
@@ -22,7 +21,6 @@ class Parser
     args
   end
 end
-# rubocop:enable Metrics/MethodLength
 
 def my_function
   options = Parser.parse ARGV

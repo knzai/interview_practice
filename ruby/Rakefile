@@ -2,7 +2,7 @@
 
 task default: %w[test]
 
-desc "run the tests"
+desc 'run the tests'
 task :test do
   ruby 'example_test.rb'
 end
