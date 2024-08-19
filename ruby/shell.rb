@@ -12,6 +12,12 @@ require 'optparse'
 # constants
 SCRIPT_NAME = 'example.rb'
 VERSION_NUM = '0.1'
+RESET = `tput setaf 7`.freeze
+RED = `tput setaf 1`.freeze
+GREEN = `tput setaf 2`.freeze
+BLUE = `tput setaf 4`.freeze
+CYAN = `tput setaf 6`.freeze
+YELLOW = `tput setaf 3`.freeze
 
 #============================
 # USAGE & METADATA
@@ -24,7 +30,9 @@ def usage
     #{RED}<ENV>#{RESET} ./#{SCRIPT_NAME} #{YELLOW}[-h, --help] [-v --version] [-e --example #{RED}<arg>#{YELLOW}]#{RESET}
     #{CYAN}Environoment variables:#{RESET}
         FOO                              REQUIRED
-    #{CYAN}Arguments:#{RESET}
+    #{CYAN}Positional Arguments:#{RESET}
+        ARGV[0]                          Name to address greeting to
+    #{CYAN}Flags and Options:#{RESET}
   USAGE
 end
 
@@ -52,6 +60,10 @@ class Parser
       opts.on('--version', 'Output version with more metadata') do
         warn metadata
         exit
+      end
+
+      opts.on('-gGREETING', "--greeting=GREETING", 'Greeting to address to ARGV[0]') do |name|
+        args[:name] = name
       end
     end
 
@@ -88,24 +100,11 @@ def metadata
 end
 
 #============================
-# MESSAGING & COLORS
-#============================
-# figure out how much you care about this later
-# if `tput colors` > 7
-RESET = `tput setaf 7`.freeze
-RED = `tput setaf 1`.freeze
-GREEN = `tput setaf 2`.freeze
-BLUE = `tput setaf 4`.freeze
-CYAN = `tput setaf 6`.freeze
-YELLOW = `tput setaf 3`.freeze
-# end
-
-#============================
 # MAIN
 #============================
 def my_function
   options = Parser.parse ARGV
-  warn options
+  puts "#{ARGV[0]} #{options[:name]}"
   0
 end
 my_function
