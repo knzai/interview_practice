@@ -5,6 +5,7 @@
 # REQUIRES/DEPS
 #============================
 require 'optparse'
+require './canvas'
 
 #============================
 # CONSTANTS & DEFAULTS
@@ -115,9 +116,32 @@ end
 # MAIN
 #============================
 def my_function
-  args = ArgParser.parse
-  puts "#{args[:greeting]} #{args[:name]}"
-  0
+  puts "Hi, let's draw a program."
+  #puts "What size canvas would you like, INSERT BETTER TEXT (default 8 8):"
+  #x,y STDIN.gets.chomp.split(" ")
+
+
+  # pixels = []
+  canvas = Canvas.new(8, 8)
+  while true
+    input = STDIN.gets.chomp
+    orient, coord = input.split(' ')
+    coord = Integer(coord)
+    case orient
+    when "h"
+      canvas.draw_horizontal(coord)
+    when "v"
+      canvas.draw_vertical(coord)
+    end
+
+    canvas.each do |line|
+      puts line
+    end
+  end
+
+  #args = ArgParser.parse
+  #puts "#{args[:greeting]} #{args[:name]}"
+  #0
 end
 my_function
 
